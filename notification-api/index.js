@@ -22,3 +22,7 @@ triggerButton.addEventListener("click", () => {
     });
   }, 1000);
 });
+
+window.addEventListener("beforeunload", (event) => {
+  event.preventDefault();
+});
