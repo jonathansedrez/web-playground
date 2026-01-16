@@ -4,5 +4,5 @@ import million from "million/compiler";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [million.vite({}), react()],
+  plugins: [million.vite({ auto: true }), react()],
 });
