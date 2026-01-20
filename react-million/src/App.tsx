@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { block } from "million/react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { Benchmark, BenchmarkWithoutBlock } from "./Benchmark";
 
-const AppBlock = block(function App() {
-  const [count, setCount] = useState(0);
+function App() {
+  const [showBenchmark, setShowBenchmark] = useState(false);
 
   return (
     <>
@@ -17,20 +17,26 @@ const AppBlock = block(function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Vite + React + Million.js</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => setShowBenchmark(!showBenchmark)}>
+          {showBenchmark ? "Hide" : "Show"} Benchmark
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {showBenchmark && (
+        <div style={{ display: "flex", gap: "20px", textAlign: "left" }}>
+          <div style={{ flex: 1 }}>
+            <h3>With Million.js</h3>
+            <Benchmark />
+          </div>
+          <div style={{ flex: 1 }}>
+            <h3>Without Million.js</h3>
+            <BenchmarkWithoutBlock />
+          </div>
+        </div>
+      )}
     </>
   );
-});
+}
 
-export default AppBlock;
+export default App;
