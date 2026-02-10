@@ -1,9 +1,133 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Counter from "../components/Counter";
 ---
 
 <Layout>
   <main>
-    <h1>Islands</h1>
+    <section class="hero">
+      <h1>Astro Islands</h1>
+      <p class="subtitle">Partial hydration for optimal performance</p>
+    </section>
+
+    <section class="concept">
+      <h2>What are Islands?</h2>
+      <p>
+        Islands architecture is a pattern where interactive UI components are
+        isolated "islands" in a sea of static HTML. Each island hydrates
+        independently, sending only the JavaScript needed for that component.
+      </p>
+
+      <div class="diagram">
+        <div class="static-html">
+          <span>Static HTML</span>
+          <div class="island" data-type="header">
+            <span>Interactive Island</span>
+            <code>client:load</code>
+          </div>
+          <div class="static-content">Static Content</div>
+          <div class="island" data-type="sidebar">
+            <span>Interactive Island</span>
+            <code>client:visible</code>
+          </div>
+          <div class="static-content">More Static Content</div>
+          <div class="island" data-type="footer">
+            <span>Interactive Island</span>
+            <code>client:idle</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="directives">
+      <h2>Client Directives</h2>
+      <p>
+        Astro provides several directives to control when components hydrate:
+      </p>
+
+      <div class="directive-grid">
+        <article class="directive-card">
+          <h3><code>client:load</code></h3>
+          <p>
+            Hydrates immediately on page load. Use for above-the-fold UI that
+            needs to be interactive ASAP.
+          </p>
+          <div class="priority high">High Priority</div>
+        </article>
+
+        <article class="directive-card">
+          <h3><code>client:idle</code></h3>
+          <p>
+            Hydrates once the main thread is free. Good for lower-priority
+            components.
+          </p>
+          <div class="priority medium">Medium Priority</div>
+        </article>
+
+        <article class="directive-card">
+          <h3><code>client:visible</code></h3>
+          <p>
+            Hydrates when the component enters the viewport. Perfect for
+            below-the-fold content.
+          </p>
+          <div class="priority low">Low Priority</div>
+        </article>
+
+        <article class="directive-card">
+          <h3><code>client:media</code></h3>
+          <p>
+            Hydrates when a CSS media query is met. Great for mobile-only
+            interactions.
+          </p>
+          <div class="priority conditional">Conditional</div>
+        </article>
+
+        <article class="directive-card">
+          <h3><code>client:only</code></h3>
+          <p>
+            Skips server rendering entirely. For components that can't render on
+            the server.
+          </p>
+          <div class="priority special">Client Only</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="demo">
+      <h2>Interactive Demo</h2>
+      <p>
+        This React counter hydrates when it becomes visible in the viewport:
+      </p>
+
+      <Counter client:visible />
+
+      <div class="code-example">
+        <pre><code>&lt;Counter client:visible /&gt;</code></pre>
+        <p>
+          This component only loads JavaScript when scrolled into view,
+          reducing initial page load.
+        </p>
+      </div>
+    </section>
+
+    <section class="benefits">
+      <h2>Why Islands?</h2>
+      <ul>
+        <li>
+          <strong>Zero JS by default</strong> — Static content ships no JavaScript
+        </li>
+        <li>
+          <strong>Parallel loading</strong> — Islands hydrate independently
+        </li>
+        <li>
+          <strong>Progressive enhancement</strong> — HTML works before JS loads
+        </li>
+        <li>
+          <strong>Fine-grained control</strong> — Choose exactly when to hydrate
+        </li>
+      </ul>
+    </section>
+
+    <a href="/">← Back to Home</a>
   </main>
 </Layout>
