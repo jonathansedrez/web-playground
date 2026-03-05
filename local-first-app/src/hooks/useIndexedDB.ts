@@ -1,15 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const DB_NAME = "local-first-db";
 const DB_VERSION = 1;
 const STORE_NAME = "app-state";
 
+let dbInstance: IDBDatabase | null = null;
+
 function openDB(): Promise<IDBDatabase> {
+  if (dbInstance) return Promise.resolve(dbInstance);
+
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      dbInstance = request.result;
+      resolve(dbInstance);
+    };
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
@@ -45,20 +52,22 @@ async function setValue<T>(key: string, value: T): Promise<void> {
 }
 
 export function useIndexedDB<T>(key: string, initialValue: T) {
-  const [count, setCount_] = useState<T>(initialValue);
-  const [isLoading, setIsLoading] = useState(true);
+  const [value, setValue_] = useState<T>(initialValue);
+  const isHydrated = useRef(false);
 
   useEffect(() => {
+    if (isHydrated.current) return;
+
     getValue<T>(key).then((storedValue) => {
+      isHydrated.current = true;
       if (storedValue !== undefined) {
-        setCount_(storedValue);
+        setValue_(storedValue);
       }
-      setIsLoading(false);
     });
   }, [key]);
 
-  const setCount = (newValue: T | ((prev: T) => T)) => {
-    setCount_((prev) => {
+  const setValuePersisted = (newValue: T | ((prev: T) => T)) => {
+    setValue_((prev) => {
       const resolvedValue =
         newValue instanceof Function ? newValue(prev) : newValue;
       setValue(key, resolvedValue);
@@ -66,5 +75,5 @@ export function useIndexedDB<T>(key: string, initialValue: T) {
     });
   };
 
-  return [count, setCount, isLoading] as const;
+  return [value, setValuePersisted] as const;
 }

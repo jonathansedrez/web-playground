@@ -4,11 +4,7 @@ import "./App.css";
 import { useIndexedDB } from "./hooks/useIndexedDB";
 
 function App() {
-  const [count, setCount, isLoading] = useIndexedDB("count", 0);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const [count, setCount] = useIndexedDB("count", 0);
 
   return (
     <>
