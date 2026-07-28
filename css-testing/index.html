@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing Table</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1 class="hero__title">Simple, Transparent Pricing</h1>
+      <p class="hero__description">
+        Choose the plan that works best for you. Upgrade or downgrade anytime.
+      </p>
+
+      <div class="billing">
+        <span class="billing__label">Monthly</span>
+        <button class="billing__toggle" id="billingToggle" aria-pressed="false">
+          <span class="billing__thumb"></span>
+        </button>
+        <span class="billing__label">
+          Yearly
+          <span class="badge">Save 20%</span>
+        </span>
+      </div>
+    </header>
+
+    <main class="cards">
+      <article class="card card--starter">
+        <div class="card__tag">Starter</div>
+        <div class="card__icon">🌱</div>
+        <div class="card__price">
+          <span class="price__currency">$</span>
+          <span class="price__amount" data-monthly="9" data-yearly="7">9</span>
+          <span class="price__period">/mo</span>
+        </div>
+        <ul class="card__features">
+          <li class="feature feature--yes">1 user</li>
+          <li class="feature feature--yes">5 projects</li>
+          <li class="feature feature--yes">10 GB storage</li>
+          <li class="feature feature--no">Custom domain</li>
+          <li class="feature feature--no">Analytics</li>
+          <li class="feature feature--no">Priority support</li>
+        </ul>
+        <button class="card__cta">Get Started</button>
+      </article>
+
+      <article class="card card--pro card--popular">
+        <div class="card__badge">Most Popular</div>
+        <div class="card__tag">Pro</div>
+        <div class="card__icon">🚀</div>
+        <div class="card__price">
+          <span class="price__currency">$</span>
+          <span class="price__amount" data-monthly="29" data-yearly="23">29</span>
+          <span class="price__period">/mo</span>
+        </div>
+        <ul class="card__features">
+          <li class="feature feature--yes">5 users</li>
+          <li class="feature feature--yes">Unlimited projects</li>
+          <li class="feature feature--yes">100 GB storage</li>
+          <li class="feature feature--yes">Custom domain</li>
+          <li class="feature feature--yes">Analytics</li>
+          <li class="feature feature--no">Priority support</li>
+        </ul>
+        <button class="card__cta">Get Started</button>
+      </article>
+
+      <article class="card card--enterprise">
+        <div class="card__tag">Enterprise</div>
+        <div class="card__icon">🏢</div>
+        <div class="card__price">
+          <span class="price__currency">$</span>
+          <span class="price__amount" data-monthly="79" data-yearly="63">79</span>
+          <span class="price__period">/mo</span>
+        </div>
+        <ul class="card__features">
+          <li class="feature feature--yes">Unlimited users</li>
+          <li class="feature feature--yes">Unlimited projects</li>
+          <li class="feature feature--yes">1 TB storage</li>
+          <li class="feature feature--yes">Custom domain</li>
+          <li class="feature feature--yes">Advanced analytics</li>
+          <li class="feature feature--yes">Priority support</li>
+        </ul>
+        <button class="card__cta">Contact Sales</button>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p>
+        All plans include a <strong class="footer__highlight">14-day free trial</strong>. No credit card required.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
