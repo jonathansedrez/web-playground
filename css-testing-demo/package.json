@@ -1,0 +1,20 @@
+{
+  "name": "css-testing-demo",
+  "version": "1.0.0",
+  "description": "Live-demo repo for a talk on testing CSS with Stylelint and Playwright.",
+  "private": true,
+  "scripts": {
+    "lint": "stylelint \"src/**/*.css\"",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "demo:break-lint": "cp demo/lint-violation.css src/styles/main.css",
+    "demo:break-layout": "cp demo/layout-break.css src/styles/main.css",
+    "demo:break-state": "cp demo/state-break.css src/styles/main.css",
+    "demo:reset": "cp demo/original/main.css src/styles/main.css"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  }
+}

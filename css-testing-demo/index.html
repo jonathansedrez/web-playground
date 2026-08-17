@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Testing Demo — Priority Badges</title>
+  <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body>
+  <main>
+    <h1>Priority Badge Component</h1>
+    <p class="subtitle">Three states, one rule, zero JS — driven entirely by a CSS custom property.</p>
+
+    <div class="badge-row" role="list" aria-label="Priority badge examples">
+      <div class="badge-wrapper" style="--priority: low" role="listitem">
+        <span class="badge">Low</span>
+      </div>
+      <div class="badge-wrapper" style="--priority: medium" role="listitem">
+        <span class="badge">Medium</span>
+      </div>
+      <div class="badge-wrapper" style="--priority: high" role="listitem">
+        <span class="badge">High</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

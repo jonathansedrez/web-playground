@@ -1,0 +1,113 @@
+/* =====================================================
+   Priority Badge — CSS Testing Demo
+
+   Color switching uses @container style() queries
+   (Chrome 111+, Firefox 110+, Safari 18+).
+
+   CSS if() (Chromium 130+) is the future-facing
+   equivalent — shown here in comments:
+
+   .badge {
+     background: if(
+       style(--priority: high):   var(--color-high-bg);
+       style(--priority: medium): var(--color-medium-bg);
+       else:                      var(--color-low-bg)
+     );
+     color: if(
+       style(--priority: high):   var(--color-high-text);
+       style(--priority: medium): var(--color-medium-text);
+       else:                      var(--color-low-text)
+     );
+   }
+   ===================================================== */
+
+/* --- Tokens ----------------------------------------- */
+:root {
+  --color-low-bg: #d1fae5;
+  --color-low-text: #065f46;
+  --color-medium-bg: #fef3c7;
+  --color-medium-text: #92400e;
+  --color-high-bg: #fee2e2;
+  --color-high-text: #991b1b;
+  --badge-radius: 9999px;
+  --badge-font-size: 0.875rem;
+}
+
+/* --- Reset ------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* --- Page layout ------------------------------------ */
+body {
+  font-family: system-ui, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  margin: 0;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-block: 0 0.375rem;
+}
+
+.subtitle {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin-block: 0 1.75rem;
+}
+
+/* --- Badge row -------------------------------------- */
+.badge-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  width: fit-content;
+  list-style: none;
+  margin: 0;
+}
+
+/* --- Badge wrapper (style query container) ---------- */
+.badge-wrapper {
+  container-name: badge-container;
+}
+
+/* --- Badge base ------------------------------------- */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.875rem;
+  border-radius: var(--badge-radius);
+  font-size: var(--badge-font-size);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+
+  /* Default: low priority */
+  background: var(--color-low-bg);
+  color: var(--color-low-text);
+}
+
+/* --- Conditional color via @container style() ------- */
+@container badge-container style(--priority: medium) {
+  .badge {
+    background: var(--color-medium-bg);
+    color: var(--color-medium-text);
+  }
+}
+
+@container badge-container style(--priority: high) {
+  .badge {
+    background: var(--color-high-bg);
+    color: var(--color-high-text);
+  }
+}
