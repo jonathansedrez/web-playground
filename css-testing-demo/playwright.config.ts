@@ -3,6 +3,7 @@ import path from 'path';
 
 export default defineConfig({
   testDir: './tests',
+  testMatch: '**/*.spec.ts',
   snapshotDir: './tests/__snapshots__',
   use: {
     ...devices['Desktop Chrome'],
