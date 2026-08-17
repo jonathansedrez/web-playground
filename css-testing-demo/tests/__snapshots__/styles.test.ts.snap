@@ -1,4 +1,7 @@
-/* =====================================================
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`main.css matches snapshot 1`] = `
+"/* =====================================================
    Priority Badge — CSS Testing Demo
 
    Color switching uses @container style() queries
@@ -88,7 +91,7 @@ h1 {
   padding: 0.3rem 0.875rem;
   border-radius: var(--badge-radius);
   font-size: var(--badge-font-size);
-  font-weight: 600 !important; /* ← VIOLATION: declaration-no-important */
+  font-weight: 600;
   letter-spacing: 0.01em;
   white-space: nowrap;
 
@@ -111,3 +114,5 @@ h1 {
     color: var(--color-high-text);
   }
 }
+"
+`;

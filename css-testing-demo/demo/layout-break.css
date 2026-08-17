@@ -1,12 +1,24 @@
 /* =====================================================
-   DEMO 2 — Visual regression seeded here.
+   Priority Badge — CSS Testing Demo
 
-   Break: flex-direction changed row → column, gap
-   removed, align-items changed. Badges now stack
-   vertically and lose all horizontal spacing.
+   Color switching uses @container style() queries
+   (Chrome 111+, Firefox 110+, Safari 18+).
 
-   Stylelint cannot catch this — the CSS is valid.
-   Only a screenshot diff reveals the regression.
+   CSS if() (Chromium 130+) is the future-facing
+   equivalent — shown here in comments:
+
+   .badge {
+     background: if(
+       style(--priority: high):   var(--color-high-bg);
+       style(--priority: medium): var(--color-medium-bg);
+       else:                      var(--color-low-bg)
+     );
+     color: if(
+       style(--priority: high):   var(--color-high-text);
+       style(--priority: medium): var(--color-medium-text);
+       else:                      var(--color-low-text)
+     );
+   }
    ===================================================== */
 
 /* --- Tokens ----------------------------------------- */
