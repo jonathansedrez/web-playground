@@ -26,21 +26,18 @@
         justify-content: center;
       }
 
-      /* Wrapper sizes to the full ring (circle + border) */
       .ring-wrapper {
         position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        transition: width 0.15s, height 0.15s;
+        transition: width 0.15s, height 0.15s, clip-path 0.4s ease;
       }
 
-      /* Gold texture ring — tint applied via background-blend-mode */
       .metal {
         position: absolute;
         inset: 0;
-        border-radius: 50%;
         --tint: rgba(0, 0, 0, 0);
         background-image: linear-gradient(var(--tint), var(--tint)), url("gold.png");
         background-blend-mode: color, normal;
@@ -48,41 +45,20 @@
         background-position: center, center;
       }
 
-      /* Metal variants */
-      .metal--ouro {
-        --tint: rgba(0, 0, 0, 0);
-        filter: none;
-      }
+      .metal--ouro  { --tint: rgba(0,0,0,0); filter: none; }
+      .metal--prata { --tint: rgba(201,207,211,0.92); filter: grayscale(1) brightness(1.05) contrast(1.15); }
+      .metal--cobre { --tint: rgba(194,112,63,0.92);  filter: brightness(0.95) contrast(1.1); }
+      .metal--rose-gold { --tint: rgba(183,110,121,0.92); filter: brightness(1.05) contrast(1.12); }
 
-      .metal--prata {
-        --tint: rgba(201, 207, 211, 0.92);
-        /* grayscale is safe here — silver tint is already achromatic */
-        filter: grayscale(1) brightness(1.05) contrast(1.15);
-      }
-
-      .metal--cobre {
-        --tint: rgba(194, 112, 63, 0.92);
-        /* no grayscale: filter would strip the copper hue from the tint gradient */
-        filter: brightness(0.95) contrast(1.1);
-      }
-
-      .metal--rose-gold {
-        --tint: rgba(183, 110, 121, 0.92);
-        /* same — grayscale would kill the rose hue */
-        filter: brightness(1.05) contrast(1.12);
-      }
-
-      /* Circle sits on top of the ring */
       .circle {
         position: relative;
         z-index: 1;
-        border-radius: 50%;
         overflow: hidden;
         background-image: url("gem.png");
         background-size: cover;
         background-position: center;
         flex-shrink: 0;
-        transition: width 0.15s, height 0.15s;
+        transition: width 0.15s, height 0.15s, clip-path 0.4s ease;
       }
 
       .controls {
@@ -113,12 +89,16 @@
         color: #333;
       }
 
-      .metal-buttons {
+      .metal-buttons,
+      .shape-buttons,
+      .stone-buttons {
         display: flex;
         gap: 8px;
       }
 
-      .metal-buttons button {
+      .metal-buttons button,
+      .shape-buttons button,
+      .stone-buttons button {
         padding: 6px 14px;
         border: 2px solid #ccc;
         border-radius: 20px;
@@ -129,7 +109,9 @@
         transition: border-color 0.2s, background 0.2s, color 0.2s;
       }
 
-      .metal-buttons button.active {
+      .metal-buttons button.active,
+      .shape-buttons button.active,
+      .stone-buttons button.active {
         border-color: #333;
         background: #333;
         color: white;
@@ -168,6 +150,20 @@
         <span>1.0</span>
       </div>
       <span class="size-label" id="label">0.6</span>
+
+      <div class="stone-buttons">
+        <button class="active" onclick="setStone('gem.png', this)">Garnet</button>
+        <button onclick="setStone('moonstone.png', this)">Moonstone</button>
+        <button onclick="setStone('emerald.png', this)">Emerald</button>
+      </div>
+
+      <div class="shape-buttons">
+        <button class="active" onclick="setShape(0, this)">Rough Slab</button>
+        <button onclick="setShape(1, this)">Tapered</button>
+        <button onclick="setShape(2, this)">Diamond</button>
+        <button onclick="setShape(3, this)">Raw Chunk</button>
+      </div>
+
       <div class="metal-buttons">
         <button class="active" onclick="setMetal('ouro', this)">Gold</button>
         <button onclick="setMetal('prata', this)">Silver</button>
@@ -182,9 +178,22 @@
       const slider = document.getElementById("slider");
       const label = document.getElementById("label");
 
-      const steps = [0.2, 0.4, 0.6, 0.8, 1.0];
-      const sizes = [80, 160, 240, 320, 400];
+      const steps   = [0.2, 0.4, 0.6, 0.8, 1.0];
+      const sizes   = [80, 160, 240, 320, 400];
       const borders = [4, 7, 11, 14, 18];
+
+      const shapes = [
+        // Rough Slab — wide, irregular 8-point hexagon
+        "polygon(8% 12%, 48% 2%, 94% 6%, 100% 50%, 90% 94%, 42% 100%, 4% 88%, 0% 40%)",
+        // Tapered — narrow top, wider base, like a raw crystal
+        "polygon(30% 0%, 70% 4%, 100% 40%, 94% 88%, 54% 100%, 6% 96%, 0% 54%, 16% 8%)",
+        // Asymmetric Diamond — offset peak, 7 points
+        "polygon(40% 0%, 88% 16%, 100% 60%, 74% 100%, 18% 98%, 0% 64%, 14% 18%)",
+        // Raw Chunk — most irregular, uneven edges
+        "polygon(20% 2%, 65% 0%, 100% 25%, 98% 68%, 78% 100%, 24% 98%, 0% 72%, 4% 28%)",
+      ];
+
+      let currentShape = shapes[0];
 
       function update() {
         const index = parseInt(slider.value) - 1;
@@ -199,6 +208,20 @@
         label.textContent = steps[index].toFixed(1);
       }
 
+      function setShape(index, btn) {
+        currentShape = shapes[index];
+        ringWrapper.style.clipPath = currentShape;
+        circle.style.clipPath = currentShape;
+        document.querySelectorAll(".shape-buttons button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      function setStone(file, btn) {
+        circle.style.backgroundImage = `url("${file}")`;
+        document.querySelectorAll(".stone-buttons button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
       function setMetal(name, btn) {
         metal.className = `metal metal--${name}`;
         document.querySelectorAll(".metal-buttons button").forEach((b) => b.classList.remove("active"));
@@ -207,6 +230,7 @@
 
       slider.addEventListener("input", update);
       update();
+      setShape(0, document.querySelector(".shape-buttons button"));
     </script>
   </body>
 </html>
