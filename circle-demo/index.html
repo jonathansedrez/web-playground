@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Circle Demo</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+        background-color: #f0f0f0;
+      }
+
+      .stage {
+        width: 420px;
+        height: 420px;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Wrapper sizes to the full ring (circle + border) */
+      .ring-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: width 0.15s, height 0.15s;
+      }
+
+      /* Gold texture ring — tint applied via background-blend-mode */
+      .metal {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        --tint: rgba(0, 0, 0, 0);
+        background-image: linear-gradient(var(--tint), var(--tint)), url("gold.png");
+        background-blend-mode: color, normal;
+        background-size: cover, cover;
+        background-position: center, center;
+      }
+
+      /* Metal variants */
+      .metal--ouro {
+        --tint: rgba(0, 0, 0, 0);
+        filter: none;
+      }
+
+      .metal--prata {
+        --tint: rgba(201, 207, 211, 0.92);
+        /* grayscale is safe here — silver tint is already achromatic */
+        filter: grayscale(1) brightness(1.05) contrast(1.15);
+      }
+
+      .metal--cobre {
+        --tint: rgba(194, 112, 63, 0.92);
+        /* no grayscale: filter would strip the copper hue from the tint gradient */
+        filter: brightness(0.95) contrast(1.1);
+      }
+
+      .metal--rose-gold {
+        --tint: rgba(183, 110, 121, 0.92);
+        /* same — grayscale would kill the rose hue */
+        filter: brightness(1.05) contrast(1.12);
+      }
+
+      /* Circle sits on top of the ring */
+      .circle {
+        position: relative;
+        z-index: 1;
+        border-radius: 50%;
+        overflow: hidden;
+        background-image: url("gem.png");
+        background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
+        transition: width 0.15s, height 0.15s;
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      input[type="range"] {
+        width: 300px;
+        accent-color: #333;
+      }
+
+      .tick-labels {
+        display: flex;
+        justify-content: space-between;
+        width: 300px;
+        font-family: sans-serif;
+        font-size: 12px;
+        color: #888;
+      }
+
+      .size-label {
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .metal-buttons {
+        display: flex;
+        gap: 8px;
+      }
+
+      .metal-buttons button {
+        padding: 6px 14px;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        background: white;
+        font-family: sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s, color 0.2s;
+      }
+
+      .metal-buttons button.active {
+        border-color: #333;
+        background: #333;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="ring-wrapper" id="ring-wrapper">
+        <div class="metal metal--ouro" id="metal"></div>
+        <div class="circle" id="circle"></div>
+      </div>
+    </div>
+    <div class="controls">
+      <input
+        type="range"
+        id="slider"
+        min="1"
+        max="5"
+        step="1"
+        value="3"
+        list="checkpoints"
+      />
+      <datalist id="checkpoints">
+        <option value="1"></option>
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+        <option value="5"></option>
+      </datalist>
+      <div class="tick-labels">
+        <span>0.2</span>
+        <span>0.4</span>
+        <span>0.6</span>
+        <span>0.8</span>
+        <span>1.0</span>
+      </div>
+      <span class="size-label" id="label">0.6</span>
+      <div class="metal-buttons">
+        <button class="active" onclick="setMetal('ouro', this)">Gold</button>
+        <button onclick="setMetal('prata', this)">Silver</button>
+        <button onclick="setMetal('cobre', this)">Copper</button>
+        <button onclick="setMetal('rose-gold', this)">Rose Gold</button>
+      </div>
+    </div>
+    <script>
+      const circle = document.getElementById("circle");
+      const ringWrapper = document.getElementById("ring-wrapper");
+      const metal = document.getElementById("metal");
+      const slider = document.getElementById("slider");
+      const label = document.getElementById("label");
+
+      const steps = [0.2, 0.4, 0.6, 0.8, 1.0];
+      const sizes = [80, 160, 240, 320, 400];
+      const borders = [4, 7, 11, 14, 18];
+
+      function update() {
+        const index = parseInt(slider.value) - 1;
+        const px = sizes[index];
+        const border = borders[index];
+        const ringSize = px + border * 2;
+
+        circle.style.width = px + "px";
+        circle.style.height = px + "px";
+        ringWrapper.style.width = ringSize + "px";
+        ringWrapper.style.height = ringSize + "px";
+        label.textContent = steps[index].toFixed(1);
+      }
+
+      function setMetal(name, btn) {
+        metal.className = `metal metal--${name}`;
+        document.querySelectorAll(".metal-buttons button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+
+      slider.addEventListener("input", update);
+      update();
+    </script>
+  </body>
+</html>
