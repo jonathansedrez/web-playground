@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Circle Demo</title>
+    <title>Necklace Demo</title>
     <style>
       body {
         margin: 0;
@@ -17,13 +17,15 @@
       }
 
       .stage {
-        width: 420px;
-        height: 420px;
-        background-size: cover;
-        background-position: center;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 40px 48px;
+        background-color: #2c2c2c;
+        min-height: 220px;
+        max-width: 90vw;
+        overflow-x: auto;
+        border-radius: 4px;
       }
 
       .ring-wrapper {
@@ -32,7 +34,7 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        transition: width 0.15s, height 0.15s, clip-path 0.4s ease;
+        transition: width 0.2s, height 0.2s, clip-path 0.4s ease;
       }
 
       .metal {
@@ -45,60 +47,53 @@
         background-position: center, center;
       }
 
-      .metal--ouro  { --tint: rgba(0,0,0,0); filter: none; }
-      .metal--prata { --tint: rgba(201,207,211,0.92); filter: grayscale(1) brightness(1.05) contrast(1.15); }
-      .metal--cobre { --tint: rgba(194,112,63,0.92);  filter: brightness(0.95) contrast(1.1); }
+      .metal--ouro      { --tint: rgba(0,0,0,0); filter: none; }
+      .metal--prata     { --tint: rgba(201,207,211,0.92); filter: grayscale(1) brightness(1.05) contrast(1.15); }
+      .metal--cobre     { --tint: rgba(194,112,63,0.92);  filter: brightness(0.95) contrast(1.1); }
       .metal--rose-gold { --tint: rgba(183,110,121,0.92); filter: brightness(1.05) contrast(1.12); }
 
       .circle {
         position: relative;
         z-index: 1;
         overflow: hidden;
-        background-image: url("gem.png");
         background-size: cover;
         background-position: center;
         flex-shrink: 0;
-        transition: width 0.15s, height 0.15s, clip-path 0.4s ease;
+        transition: width 0.2s, height 0.2s, clip-path 0.4s ease;
       }
 
+      /* Controls */
       .controls {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 8px;
+        gap: 16px;
       }
 
-      input[type="range"] {
-        width: 300px;
-        accent-color: #333;
-      }
-
-      .tick-labels {
+      .control-group {
         display: flex;
-        justify-content: space-between;
-        width: 300px;
-        font-family: sans-serif;
-        font-size: 12px;
-        color: #888;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
       }
 
-      .size-label {
+      .control-label {
         font-family: sans-serif;
-        font-size: 14px;
+        font-size: 10px;
         font-weight: 600;
-        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #aaa;
       }
 
-      .metal-buttons,
-      .shape-buttons,
-      .stone-buttons {
+      .btn-row {
         display: flex;
         gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
       }
 
-      .metal-buttons button,
-      .shape-buttons button,
-      .stone-buttons button {
+      .btn-row button {
         padding: 6px 14px;
         border: 2px solid #ccc;
         border-radius: 20px;
@@ -109,128 +104,221 @@
         transition: border-color 0.2s, background 0.2s, color 0.2s;
       }
 
-      .metal-buttons button.active,
-      .shape-buttons button.active,
-      .stone-buttons button.active {
+      .btn-row button.active {
         border-color: #333;
         background: #333;
         color: white;
       }
+
+      input[type="range"] {
+        width: 260px;
+        accent-color: #333;
+      }
+
+      .tick-labels {
+        display: flex;
+        justify-content: space-between;
+        width: 260px;
+        font-family: sans-serif;
+        font-size: 11px;
+        color: #aaa;
+      }
     </style>
   </head>
   <body>
-    <div class="stage">
-      <div class="ring-wrapper" id="ring-wrapper">
-        <div class="metal metal--ouro" id="metal"></div>
-        <div class="circle" id="circle"></div>
-      </div>
-    </div>
+    <div class="stage" id="stage"></div>
+
     <div class="controls">
-      <input
-        type="range"
-        id="slider"
-        min="1"
-        max="5"
-        step="1"
-        value="3"
-        list="checkpoints"
-      />
-      <datalist id="checkpoints">
-        <option value="1"></option>
-        <option value="2"></option>
-        <option value="3"></option>
-        <option value="4"></option>
-        <option value="5"></option>
-      </datalist>
-      <div class="tick-labels">
-        <span>0.2</span>
-        <span>0.4</span>
-        <span>0.6</span>
-        <span>0.8</span>
-        <span>1.0</span>
-      </div>
-      <span class="size-label" id="label">0.6</span>
 
-      <div class="stone-buttons">
-        <button class="active" onclick="setStone('gem.png', this)">Garnet</button>
-        <button onclick="setStone('moonstone.png', this)">Moonstone</button>
-        <button onclick="setStone('emerald.png', this)">Emerald</button>
+      <div class="control-group">
+        <span class="control-label">Size</span>
+        <input type="range" id="slider" min="1" max="5" step="1" value="3" list="checkpoints" />
+        <datalist id="checkpoints">
+          <option value="1"></option><option value="2"></option>
+          <option value="3"></option><option value="4"></option><option value="5"></option>
+        </datalist>
+        <div class="tick-labels">
+          <span>XS</span><span>S</span><span>M</span><span>L</span><span>XL</span>
+        </div>
       </div>
 
-      <div class="shape-buttons">
-        <button class="active" onclick="setShape(0, this)">Rough Slab</button>
-        <button onclick="setShape(1, this)">Tapered</button>
-        <button onclick="setShape(2, this)">Diamond</button>
-        <button onclick="setShape(3, this)">Raw Chunk</button>
+      <div class="control-group">
+        <span class="control-label">Variant</span>
+        <div class="btn-row" id="variant-buttons"></div>
       </div>
 
-      <div class="metal-buttons">
-        <button class="active" onclick="setMetal('ouro', this)">Gold</button>
-        <button onclick="setMetal('prata', this)">Silver</button>
-        <button onclick="setMetal('cobre', this)">Copper</button>
-        <button onclick="setMetal('rose-gold', this)">Rose Gold</button>
+      <div class="control-group">
+        <span class="control-label">Stone</span>
+        <div class="btn-row" id="stone-buttons">
+          <button class="active" onclick="setStone('gem.png', this)">Garnet</button>
+          <button onclick="setStone('moonstone.png', this)">Moonstone</button>
+          <button onclick="setStone('emerald.png', this)">Emerald</button>
+        </div>
       </div>
+
+      <div class="control-group">
+        <span class="control-label">Metal</span>
+        <div class="btn-row" id="metal-buttons">
+          <button class="active" onclick="setMetal('ouro', this)">Gold</button>
+          <button onclick="setMetal('prata', this)">Silver</button>
+          <button onclick="setMetal('cobre', this)">Copper</button>
+          <button onclick="setMetal('rose-gold', this)">Rose Gold</button>
+        </div>
+      </div>
+
     </div>
+
     <script>
-      const circle = document.getElementById("circle");
-      const ringWrapper = document.getElementById("ring-wrapper");
-      const metal = document.getElementById("metal");
-      const slider = document.getElementById("slider");
-      const label = document.getElementById("label");
+      // ── Shape library ────────────────────────────────────────────────────────
+      const SHAPES = {
+        // generic organics
+        roughSlab: "polygon(8% 12%, 48% 2%, 94% 6%, 100% 50%, 90% 94%, 42% 100%, 4% 88%, 0% 40%)",
+        tapered:   "polygon(30% 0%, 70% 4%, 100% 40%, 94% 88%, 54% 100%, 6% 96%, 0% 54%, 16% 8%)",
+        diamond:   "polygon(40% 0%, 88% 16%, 100% 60%, 74% 100%, 18% 98%, 0% 64%, 14% 18%)",
+        rawChunk:  "polygon(20% 2%, 65% 0%, 100% 25%, 98% 68%, 78% 100%, 24% 98%, 0% 72%, 4% 28%)",
+        shield:    "polygon(50% 0%, 92% 18%, 98% 65%, 50% 100%, 2% 65%, 8% 18%)",
+        kite:      "polygon(50% 0%, 92% 38%, 62% 100%, 38% 100%, 8% 38%)",
+        wedge:     "polygon(12% 0%, 90% 6%, 100% 58%, 72% 100%, 4% 96%, 0% 42%)",
+        pebble:    "polygon(32% 0%, 72% 4%, 100% 32%, 96% 72%, 64% 100%, 20% 96%, 0% 62%, 6% 24%)",
 
-      const steps   = [0.2, 0.4, 0.6, 0.8, 1.0];
-      const sizes   = [80, 160, 240, 320, 400];
-      const borders = [4, 7, 11, 14, 18];
+        // V1 reference shapes (2 stones)
+        squareRough: "polygon(10% 5%, 85% 0%, 100% 14%, 96% 82%, 80% 100%, 8% 95%, 0% 78%, 4% 8%)",
+        triBase:     "polygon(20% 0%, 85% 6%, 100% 48%, 78% 100%, 4% 92%, 0% 35%)",
 
-      const shapes = [
-        // Rough Slab — wide, irregular 8-point hexagon
-        "polygon(8% 12%, 48% 2%, 94% 6%, 100% 50%, 90% 94%, 42% 100%, 4% 88%, 0% 40%)",
-        // Tapered — narrow top, wider base, like a raw crystal
-        "polygon(30% 0%, 70% 4%, 100% 40%, 94% 88%, 54% 100%, 6% 96%, 0% 54%, 16% 8%)",
-        // Asymmetric Diamond — offset peak, 7 points
-        "polygon(40% 0%, 88% 16%, 100% 60%, 74% 100%, 18% 98%, 0% 64%, 14% 18%)",
-        // Raw Chunk — most irregular, uneven edges
-        "polygon(20% 2%, 65% 0%, 100% 25%, 98% 68%, 78% 100%, 24% 98%, 0% 72%, 4% 28%)",
+        // V2 reference shapes (3 stones)
+        pentaLeft:   "polygon(15% 0%, 80% 8%, 100% 38%, 72% 100%, 0% 82%, 0% 25%)",
+        largeRect:   "polygon(8% 0%, 90% 4%, 100% 24%, 95% 78%, 82% 100%, 5% 95%, 0% 68%, 2% 12%)",
+        quadRight:   "polygon(10% 0%, 78% 4%, 100% 30%, 86% 96%, 10% 100%, 0% 52%)",
+
+        // V4 reference shapes (4 stones)
+        squareTall:  "polygon(6% 8%, 88% 0%, 100% 12%, 93% 90%, 78% 100%, 5% 96%, 0% 80%, 2% 5%)",
+        widePenta:   "polygon(8% 0%, 82% 4%, 100% 24%, 90% 74%, 64% 100%, 4% 92%, 0% 50%, 3% 8%)",
+        medRect:     "polygon(12% 0%, 85% 4%, 100% 22%, 90% 84%, 72% 100%, 7% 95%, 0% 65%, 4% 10%)",
+        trapRight:   "polygon(22% 0%, 88% 8%, 100% 36%, 88% 90%, 62% 100%, 4% 90%, 0% 48%, 10% 4%)",
+      };
+
+      // ── Variants: ordered stone shapes left → right ──────────────────────────
+      const variants = [
+        // V1 — 2 stones (ref image: rough square + triangular wider-at-base)
+        ["squareRough", "triBase"],
+        // V2 — 3 stones (ref image: irregular pentagon + large rough rect + smaller quad)
+        ["pentaLeft", "largeRect", "quadRight"],
+        // V3 — 3 stones (different arrangement)
+        ["shield", "pebble", "wedge"],
+        // V4 — 4 stones (ref image: square-ish, wide pentagon, medium rect, trapezoidal)
+        ["squareTall", "widePenta", "medRect", "trapRight"],
+        // V5 — 4 stones (different arrangement)
+        ["kite", "rawChunk", "pebble", "wedge"],
+        // V6 — 5 stones
+        ["wedge", "diamond", "roughSlab", "kite", "tapered"],
+        // V7 — 6 stones
+        ["pebble", "shield", "rawChunk", "diamond", "tapered", "roughSlab"],
+        // V8 — 8 stones
+        ["diamond", "tapered", "shield", "pebble", "rawChunk", "kite", "wedge", "roughSlab"],
       ];
 
-      let currentShape = shapes[0];
+      // ── Size checkpoints ─────────────────────────────────────────────────────
+      const sizes   = [40, 60, 80, 100, 120];  // circle px
+      const borders = [3,  4,  6,  8,  10];    // ring gap px
 
-      function update() {
-        const index = parseInt(slider.value) - 1;
-        const px = sizes[index];
-        const border = borders[index];
+      // ── State ────────────────────────────────────────────────────────────────
+      let currentMetal     = "metal--ouro";
+      let currentStone     = "gem.png";
+      let currentSizeIndex = 2;
+      let currentVariant   = 0;
+
+      const stage  = document.getElementById("stage");
+      const slider = document.getElementById("slider");
+
+      // ── Render ───────────────────────────────────────────────────────────────
+      function renderVariant() {
+        const variant  = variants[currentVariant];
+        const px       = sizes[currentSizeIndex];
+        const border   = borders[currentSizeIndex];
         const ringSize = px + border * 2;
 
-        circle.style.width = px + "px";
-        circle.style.height = px + "px";
-        ringWrapper.style.width = ringSize + "px";
-        ringWrapper.style.height = ringSize + "px";
-        label.textContent = steps[index].toFixed(1);
+        stage.innerHTML = "";
+
+        variant.forEach((shapeName) => {
+          const shape = SHAPES[shapeName];
+
+          const wrapper = document.createElement("div");
+          wrapper.className       = "ring-wrapper";
+          wrapper.style.width     = ringSize + "px";
+          wrapper.style.height    = ringSize + "px";
+          wrapper.style.clipPath  = shape;
+
+          const metalEl       = document.createElement("div");
+          metalEl.className   = `metal ${currentMetal}`;
+
+          const circleEl                    = document.createElement("div");
+          circleEl.className                = "circle";
+          circleEl.style.width              = px + "px";
+          circleEl.style.height             = px + "px";
+          circleEl.style.clipPath           = shape;
+          circleEl.style.backgroundImage    = `url("${currentStone}")`;
+
+          wrapper.appendChild(metalEl);
+          wrapper.appendChild(circleEl);
+          stage.appendChild(wrapper);
+        });
       }
 
-      function setShape(index, btn) {
-        currentShape = shapes[index];
-        ringWrapper.style.clipPath = currentShape;
-        circle.style.clipPath = currentShape;
-        document.querySelectorAll(".shape-buttons button").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
+      function updateSizes() {
+        const px       = sizes[currentSizeIndex];
+        const border   = borders[currentSizeIndex];
+        const ringSize = px + border * 2;
+
+        stage.querySelectorAll(".ring-wrapper").forEach((w) => {
+          w.style.width  = ringSize + "px";
+          w.style.height = ringSize + "px";
+        });
+        stage.querySelectorAll(".circle").forEach((c) => {
+          c.style.width  = px + "px";
+          c.style.height = px + "px";
+        });
       }
 
+      // ── Controls ─────────────────────────────────────────────────────────────
       function setStone(file, btn) {
-        circle.style.backgroundImage = `url("${file}")`;
-        document.querySelectorAll(".stone-buttons button").forEach((b) => b.classList.remove("active"));
+        currentStone = file;
+        stage.querySelectorAll(".circle").forEach((c) => {
+          c.style.backgroundImage = `url("${file}")`;
+        });
+        btn.closest(".btn-row").querySelectorAll("button").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
       }
 
       function setMetal(name, btn) {
-        metal.className = `metal metal--${name}`;
-        document.querySelectorAll(".metal-buttons button").forEach((b) => b.classList.remove("active"));
+        currentMetal = `metal--${name}`;
+        stage.querySelectorAll(".metal").forEach((m) => {
+          m.className = `metal metal--${name}`;
+        });
+        btn.closest(".btn-row").querySelectorAll("button").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
       }
 
-      slider.addEventListener("input", update);
-      update();
-      setShape(0, document.querySelector(".shape-buttons button"));
+      // Build variant buttons dynamically
+      const variantContainer = document.getElementById("variant-buttons");
+      variants.forEach((_, i) => {
+        const btn       = document.createElement("button");
+        btn.textContent = `V${i + 1}`;
+        if (i === 0) btn.classList.add("active");
+        btn.addEventListener("click", () => {
+          currentVariant = i;
+          variantContainer.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderVariant();
+        });
+        variantContainer.appendChild(btn);
+      });
+
+      slider.addEventListener("input", () => {
+        currentSizeIndex = parseInt(slider.value) - 1;
+        updateSizes();
+      });
+
+      renderVariant();
     </script>
   </body>
 </html>
